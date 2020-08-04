@@ -29,6 +29,7 @@ namespace CourierKata.Application
             foreach (var parcel in Parcels)
             {
                 var cost = SizeCost.GetCost(parcel.Size);
+                cost += WeightLimit.GetCost(parcel.Size, parcel.Weight);
                 parcel.Cost = cost;
                 TotalCost += cost;
             }

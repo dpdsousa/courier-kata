@@ -7,15 +7,15 @@ namespace CourierKata.Application.UnitTests
     public class ParcelOrderTest
     {
         [Theory]
-        [InlineData(ParcelSize.Small, 1, 1, 1)]
-        [InlineData(ParcelSize.Medium, 25, 25, 25)]
-        [InlineData(ParcelSize.Large, 75, 75, 75)]
-        [InlineData(ParcelSize.ExtraLarge, 10, 50, 150)]
-        public void ShouldCreateAParcelOrder_AndSetTheTotalCost(ParcelSize result, int length, int width, int heigth)
+        [InlineData(ParcelSize.Small, 1, 1, 1, 0)]
+        [InlineData(ParcelSize.Medium, 25, 25, 25, 0)]
+        [InlineData(ParcelSize.Large, 75, 75, 75, 0)]
+        [InlineData(ParcelSize.ExtraLarge, 10, 50, 150, 0)]
+        public void ShouldCreateAParcelOrderAndSetTheTotalCost(ParcelSize result, int length, int width, int heigth, double weigth)
         {
             //Arrange
             //The test values are defined on the attribute "InlineDate"
-            var testParcel = new Parcel(length, width, heigth);
+            var testParcel = new Parcel(length, width, heigth, weigth);
 
             //Act
             var testParcelOrder = new ParcelOrder(testParcel);
@@ -31,13 +31,13 @@ namespace CourierKata.Application.UnitTests
         }
 
         [Fact]
-        public void ShouldCreateAParcelOrderWithSeveralParcels_AndSetTheTotalCost()
+        public void ShouldCreateAParcelOrderWithSeveralParcelsAndSetTheTotalCost()
         {
             var testParcels = new List<Parcel>
             {
-                new Parcel(1,1,1),
-                new Parcel(75,75,75),
-                new Parcel(150, 150, 150)
+                new Parcel(1, 1, 1, 0),
+                new Parcel(75, 75, 75, 0),
+                new Parcel(150, 150, 150, 0)
             };
 
             var testParcelOrder = new ParcelOrder(testParcels);
@@ -58,7 +58,8 @@ namespace CourierKata.Application.UnitTests
             var length = 1;
             var width = 1;
             var heigth = 1;
-            var testParcel = new Parcel(length, width, heigth);
+            var weight = 0;
+            var testParcel = new Parcel(length, width, heigth, weight);
             var speedyShipping = true;
 
             var testParcelOrder = new ParcelOrder(testParcel, speedyShipping);
@@ -73,7 +74,28 @@ namespace CourierKata.Application.UnitTests
             });
             Assert.NotNull(testParcelOrder.SpeedyShippingCost);
             Assert.Equal(speedyShippingCost, testParcelOrder.SpeedyShippingCost);
+        }
 
+        [Fact]
+        public void ShouldCreateAParcelOrderAndSetTheTotalCostWithExtraWeight()
+        {
+            var length = 1;
+            var width = 1;
+            var heigth = 1;
+            var weight = 6;
+            var testParcel = new Parcel(length, width, heigth, weight);
+
+            var testParcelOrder = new ParcelOrder(testParcel);
+
+            var expectedTotalCost = SizeCost.GetCost(ParcelSize.Small) + WeightLimit.GetCost(ParcelSize.Small, weight);
+
+            Assert.Single(testParcelOrder.Parcels);
+            Assert.Equal(expectedTotalCost, testParcelOrder.TotalCost);
+            Assert.All(testParcelOrder.Parcels, x =>
+            {
+                Assert.Equal(expectedTotalCost, x.Cost);
+            });
+            Assert.Null(testParcelOrder.SpeedyShippingCost);
         }
     }
 }

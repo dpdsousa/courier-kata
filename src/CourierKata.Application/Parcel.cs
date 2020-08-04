@@ -8,14 +8,16 @@ namespace CourierKata.Application
         public int Length { get; }
         public int Width { get; }
         public int Heigth { get; }
+        public double Weight { get; }
         public ParcelSize Size { get; private set; }
         public decimal Cost { get; set; }
 
-        public Parcel(int length, int width, int heigth)
+        public Parcel(int length, int width, int heigth, double weight)
         {
             Length = length;
             Width = width;
             Heigth = heigth;
+            Weight = weight;
             SetSize();
         }
 
