@@ -97,5 +97,27 @@ namespace CourierKata.Application.UnitTests
             });
             Assert.Null(testParcelOrder.SpeedyShippingCost);
         }
+
+        [Fact]
+        public void ShouldCreateAParcelOrderAndSetTheTotalForAHeavyParcel()
+        {
+            var length = 1;
+            var width = 1;
+            var heigth = 1;
+            var weight = 100d;
+            var testParcel = new Parcel(length, width, heigth, weight);
+
+            var testParcelOrder = new ParcelOrder(testParcel);
+
+            var expectedTotalCost = WeightLimit.GetHeavyParcelCost(weight);
+
+            Assert.Single(testParcelOrder.Parcels);
+            Assert.Equal(expectedTotalCost, testParcelOrder.TotalCost);
+            Assert.All(testParcelOrder.Parcels, x =>
+            {
+                Assert.Equal(expectedTotalCost, x.Cost);
+            });
+            Assert.Null(testParcelOrder.SpeedyShippingCost);
+        }
     }
 }

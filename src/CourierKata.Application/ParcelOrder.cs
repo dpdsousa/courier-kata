@@ -30,10 +30,13 @@ namespace CourierKata.Application
             {
                 var cost = SizeCost.GetCost(parcel.Size);
                 cost += WeightLimit.GetCost(parcel.Size, parcel.Weight);
-                parcel.Cost = cost;
-                TotalCost += cost;
+                var heavyParcelCost = WeightLimit.GetHeavyParcelCost(parcel.Weight);
+
+                parcel.Cost = cost > heavyParcelCost ? heavyParcelCost : cost;
+
+                TotalCost += parcel.Cost;
             }
-        }
+        } 
 
         private void SetSpeedyShipping(bool speedyShipping)
         {

@@ -6,7 +6,7 @@ namespace CourierKata.Application.UnitTests
     public class WeightLimitTest
     {
         [Theory]
-        [InlineData(2 , ParcelSize.Small, 2)]
+        [InlineData(2, ParcelSize.Small, 2)]
         [InlineData(4, ParcelSize.Medium, 5)]
         [InlineData(6, ParcelSize.Large, 9)]
         [InlineData(8, ParcelSize.ExtraLarge, 14)]
@@ -35,6 +35,28 @@ namespace CourierKata.Application.UnitTests
             var testCost = WeightLimit.GetCost(key, weight);
 
             Assert.Equal(cost, testCost);
+        }
+
+        [Fact]
+        public void ShoudReturnTheCostOfAHeavyParcel()
+        {
+            var weight = 51d;
+
+            var testCost = WeightLimit.GetHeavyParcelCost(weight);
+
+            var expectedCost = 50 + (51 - 50) * 1;
+            Assert.Equal(expectedCost, testCost);
+        }
+
+        [Fact]
+        public void ShoudReturn50_WhenParcelIsBelowLimit()
+        {
+            var weight = 25d;
+
+            var testCost = WeightLimit.GetHeavyParcelCost(weight);
+
+            var expectedCost = 50;
+            Assert.Equal(expectedCost, testCost);
         }
 
         [Fact]

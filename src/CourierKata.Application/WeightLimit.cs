@@ -15,13 +15,14 @@ namespace CourierKata.Application
 
         private const int ExcessWeightCostRate = 2;
 
+        private const int HeavyParcelExcessWeightCostRate = 1;
+        private const double HeavyParcelLimitWeight = 50;
+        private const decimal HeavyParcelDefaultCost = 50;
+
+
         public static decimal GetCost(ParcelSize size, double weight)
         {
-            var hasKey = WeightLimits.TryGetValue(size, out var limitWeight);
-            if (!hasKey)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            var limitWeight = GetSizeLimit(size);
 
             var extraCost = 0m;
             if (weight > limitWeight)
@@ -30,6 +31,29 @@ namespace CourierKata.Application
             }
 
             return extraCost;
+        }
+
+
+        public static decimal GetHeavyParcelCost(double weight)
+        {
+            var extraCost = HeavyParcelDefaultCost;
+            if (weight > HeavyParcelLimitWeight)
+            {
+                extraCost += (decimal)(weight - HeavyParcelLimitWeight) * HeavyParcelExcessWeightCostRate;
+            }
+
+            return extraCost;
+        }
+
+        private static double GetSizeLimit(ParcelSize size)
+        {
+            var hasKey = WeightLimits.TryGetValue(size, out var limitWeight);
+            if (!hasKey)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            return limitWeight;
         }
     }
 }
