@@ -21,9 +21,13 @@ namespace CourierKata.Application.UnitTests
             var testParcelOrder = new ParcelOrder(testParcel);
 
             //Assert
-            Assert.Equal(1, testParcelOrder.Parcels.Count);
+            Assert.Single(testParcelOrder.Parcels);
             Assert.Equal(SizeCost.GetCost(result), testParcelOrder.TotalCost);
-            Assert.Equal(SizeCost.GetCost(result), testParcelOrder.Parcels.FirstOrDefault().Cost);
+            Assert.All(testParcelOrder.Parcels, x =>
+            {
+                Assert.Equal(SizeCost.GetCost(result), x.Cost);
+            });
+            Assert.Null(testParcelOrder.SpeedyShippingCost);
         }
 
         [Fact]
@@ -45,6 +49,31 @@ namespace CourierKata.Application.UnitTests
             {
                 Assert.Equal(SizeCost.GetCost(x.Size), x.Cost);
             });
+            Assert.Null(testParcelOrder.SpeedyShippingCost);
+        }
+
+        [Fact]
+        public void ShouldCreateAParcelOrderWithSpeedyShippingValueSet()
+        {
+            var length = 1;
+            var width = 1;
+            var heigth = 1;
+            var testParcel = new Parcel(length, width, heigth);
+            var speedyShipping = true;
+
+            var testParcelOrder = new ParcelOrder(testParcel, speedyShipping);
+
+            var expectedTotalCost = SizeCost.GetCost(ParcelSize.Small) * 2;
+            var speedyShippingCost = expectedTotalCost / 2;
+            Assert.Single(testParcelOrder.Parcels);
+            Assert.Equal(expectedTotalCost, testParcelOrder.TotalCost);
+            Assert.All(testParcelOrder.Parcels, x =>
+            {
+                Assert.Equal(SizeCost.GetCost(x.Size), x.Cost);
+            });
+            Assert.NotNull(testParcelOrder.SpeedyShippingCost);
+            Assert.Equal(speedyShippingCost, testParcelOrder.SpeedyShippingCost);
+
         }
     }
 }

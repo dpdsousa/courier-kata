@@ -5,19 +5,22 @@ namespace CourierKata.Application
     public class ParcelOrder
     {
         public decimal TotalCost { get; private set; }
+        public decimal? SpeedyShippingCost { get; private set; }
         public ICollection<Parcel> Parcels { get; } = new HashSet<Parcel>();
 
 
-        public ParcelOrder(Parcel parcel)
+        public ParcelOrder(Parcel parcel, bool speedyShipping = false)
         {
             Parcels.Add(parcel);
             SetCost();
+            SetSpeedyShipping(speedyShipping);
         }
 
-        public ParcelOrder(ICollection<Parcel> parcels)
+        public ParcelOrder(ICollection<Parcel> parcels, bool speedyShipping = false)
         {
             Parcels = parcels;
             SetCost();
+            SetSpeedyShipping(speedyShipping);
         }
 
 
@@ -30,5 +33,15 @@ namespace CourierKata.Application
                 TotalCost += cost;
             }
         }
+
+        private void SetSpeedyShipping(bool speedyShipping)
+        {
+            if (speedyShipping)
+            {
+                SpeedyShippingCost = TotalCost;
+                TotalCost += TotalCost;
+            }
+        }
+
     }
 }
