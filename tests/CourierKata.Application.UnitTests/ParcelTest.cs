@@ -19,6 +19,7 @@ namespace CourierKata.Application.UnitTests
             var newParcel = new Parcel(length, width, heigth, weight);
 
             //Assert
+            Assert.NotEqual(default(Guid), newParcel.Id);
             Assert.Equal(result, newParcel.Size);
             Assert.Equal(length, newParcel.Length);
             Assert.Equal(width, newParcel.Width);

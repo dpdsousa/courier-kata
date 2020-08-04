@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace CourierKata.Application
 {
     public class Parcel
     {
+        public Guid Id { get; }
         public int Length { get; }
         public int Width { get; }
         public int Heigth { get; }
@@ -14,6 +16,7 @@ namespace CourierKata.Application
 
         public Parcel(int length, int width, int heigth, double weight)
         {
+            Id = Guid.NewGuid();
             Length = length;
             Width = width;
             Heigth = heigth;

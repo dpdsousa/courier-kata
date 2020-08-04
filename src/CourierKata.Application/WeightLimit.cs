@@ -33,7 +33,6 @@ namespace CourierKata.Application
             return extraCost;
         }
 
-
         public static decimal GetHeavyParcelCost(double weight)
         {
             var extraCost = HeavyParcelDefaultCost;

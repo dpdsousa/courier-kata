@@ -119,5 +119,62 @@ namespace CourierKata.Application.UnitTests
             });
             Assert.Null(testParcelOrder.SpeedyShippingCost);
         }
+
+        [Fact]
+        public void ShouldApplyOneSmallDiscount()
+        {
+            var testParcels = new List<Parcel>
+            {
+                new Parcel(1, 1, 1, 0),
+                new Parcel(1, 1, 1, 0),
+                new Parcel(1, 1, 1, 0),
+                new Parcel(1, 1, 1, 2)
+            };
+
+            var newParcelOrder = new ParcelOrder(testParcels);
+
+            Assert.Equal(testParcels.Count(), newParcelOrder.Parcels.Count());
+            Assert.Single(newParcelOrder.Discounts);
+            Assert.Equal(3, newParcelOrder.TotalDiscount);
+        }
+
+        [Fact]
+        public void ShouldApplyOneMediumDiscount()
+        {
+            var testParcels = new List<Parcel>
+            {
+                new Parcel(45, 45, 45, 3),
+                new Parcel(45, 45, 45, 3),
+                new Parcel(45, 45, 45, 4),
+            };
+
+            var newParcelOrder = new ParcelOrder(testParcels);
+
+            Assert.Equal(testParcels.Count(), newParcelOrder.Parcels.Count());
+            Assert.Single(newParcelOrder.Discounts);
+            Assert.Equal(8, newParcelOrder.TotalDiscount);
+        }
+
+        [Fact]
+        public void ShouldAddOneDiscountTypeEach()
+        {
+            var testParcels = new List<Parcel>
+            {
+                 new Parcel(1, 1, 1, 0),
+                new Parcel(1, 1, 1, 0),
+                new Parcel(1, 1, 1, 0),
+                new Parcel(1, 1, 1, 2),
+                new Parcel(45, 45, 45, 3),
+                new Parcel(45, 45, 45, 3),
+                new Parcel(45, 45, 45, 4),
+                new Parcel(75, 75, 75, 0),
+            };
+
+            var newParcelOrder = new ParcelOrder(testParcels);
+
+            Assert.Equal(testParcels.Count(), newParcelOrder.Parcels.Count());
+            Assert.Equal(3, newParcelOrder.Discounts.Count());
+            Assert.Equal(14, newParcelOrder.TotalDiscount);
+        }
     }
 }
