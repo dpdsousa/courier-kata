@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace CourierKata.Application
 {
@@ -8,7 +9,7 @@ namespace CourierKata.Application
         public int Width { get; }
         public int Heigth { get; }
         public ParcelSize Size { get; private set; }
-
+        public decimal Cost { get; set; }
 
         public Parcel(int length, int width, int heigth)
         {
@@ -17,7 +18,6 @@ namespace CourierKata.Application
             Heigth = heigth;
             SetSize();
         }
-
 
         private void SetSize()
         {
